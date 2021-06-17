@@ -211,12 +211,16 @@ Application::receiveSimple(const SimpleMsg *msg)
         int level = Log::getLogLevel() + 1;
         if (level <= Log::LEVEL_DEBUG) {
             OptionAgent::agent()->setParam("loglevel", level);
+            LOG_ERROR(ExInfo("log level increased (not actually an error)")
+                .addInfo("level", level));
         }
     }
     else if (msg->equalsName("dec_loglevel")) {
         int level = Log::getLogLevel() - 1;
         if (level >= Log::LEVEL_ERROR) {
             OptionAgent::agent()->setParam("loglevel", level);
+            LOG_ERROR(ExInfo("log level decreased (not actually an error)")
+                .addInfo("level", level));
         }
     }
     else if (msg->equalsName("flush_stdout")) {
