@@ -23,6 +23,8 @@
 #include "SDL_image.h"
 #include <stdlib.h> // atexit()
 
+#define ALLOW_TOGGLE_FULLSCREEN 0
+
 //-----------------------------------------------------------------
 /**
  * Init SDL and grafic window.
@@ -192,9 +194,13 @@ VideoAgent::toggleFullScreen()
 VideoAgent::receiveSimple(const SimpleMsg *msg)
 {
     if (msg->equalsName("fullscreen")) {
-        OptionAgent *options = OptionAgent::agent();
-        bool toggle = !(options->getAsBool("fullscreen"));
-        options->setPersistent("fullscreen", toggle);
+        if (ALLOW_TOGGLE_FULLSCREEN) {
+            OptionAgent *options = OptionAgent::agent();
+            bool toggle = !(options->getAsBool("fullscreen"));
+            options->setPersistent("fullscreen", toggle);
+        } else {
+            LOG_INFO(ExInfo("fullscreen toggle suppressed"));
+        }
     }
     else {
         throw UnknownMsgException(msg);
